@@ -1,0 +1,10 @@
+#!/usr/bin/node
+const express = require("express");
+const config = require("./src/options/params");
+const static = require("./src/routers/static");
+
+const app = express();
+
+app.use("/", static);
+
+app.listen(config.http.port);
