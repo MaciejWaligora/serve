@@ -26,3 +26,6 @@
 cd your/build/dir
 ```
 
+```bash
+serve --port="2000"
+```
