@@ -22,9 +22,9 @@
 
 ## Sample usage to run on port 2000 directly from your build folder:
 
-    ```bash
-        cd your/build/dir
+    ```console
+    cd your/build/dir
     ```
-    ```bash
+    ```console
     serve --port="2000"
     ```
