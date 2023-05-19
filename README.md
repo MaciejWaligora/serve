@@ -20,11 +20,9 @@
         -js
     -index.html
 
-## Sample usage to run on port 2000 directly from your build folder:
+ Sample usage to run on port 2000 directly from your build folder:
 
-    ```console
+    ```bash
     cd your/build/dir
     ```
-    ```console
-    serve --port="2000"
-    ```
+
