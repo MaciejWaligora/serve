@@ -5,6 +5,13 @@
 ## Install
 
 1. Clone repo
+2. 
+```bash
+cd cloned/dir
+```
+```bash
+npm install
+```
 2. Add yourDir/serve to your %PATH in order for script to run anywhere
 
 ## Usage
