@@ -22,7 +22,7 @@
 
  Sample usage to run on port 2000 directly from your build folder:
 
-    ```bash
-    cd your/build/dir
-    ```
+```bash
+cd your/build/dir
+```
 
