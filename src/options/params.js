@@ -1,5 +1,6 @@
 const path = require("path");
 const Getopt = require("node-getopt");
+const log = require("../utils/logger");
 
 const options = new Getopt([
   ["h", "help", "Display help"],
@@ -7,19 +8,35 @@ const options = new Getopt([
   ["d", "dir=", "Specify serving directory"],
 ]);
 
-console.log(process.cwd());
+class Configuration {
+  constructor(opt) {
+    this.parsedOptions = opt.parseSystem();
+    this.config = {};
+    this.setHttp();
+  }
 
-const parsedOptions = options.parseSystem();
-const directory = parsedOptions.options.dir
-  ? parsedOptions.options.dir
-  : process.cwd();
-const port = parsedOptions.options.port ? parsedOptions.options.port : 3000;
+  setHttp() {
+    const directory = this.parsedOptions.options.dir
+      ? parsedOptions.options.dir
+      : process.cwd();
+    const port = this.parsedOptions.options.port
+      ? this.parsedOptions.options.port
+      : 3000;
+    this.config.http = {
+      dir: directory,
+      port: +port,
+    };
 
-const config = {
-  http: {
-    port: +port,
-    dir: directory,
-  },
-};
+    log.info("Loaded configuration:", this.config);
+  }
 
-module.exports = config;
+  get port() {
+    return this.config.http.port;
+  }
+
+  get dir() {
+    return this.config.http.dir;
+  }
+}
+
+module.exports = new Configuration(options);

@@ -1,38 +1,39 @@
 const express = require("express");
-const config = require("../options/params.js");
 const router = express.Router();
 const path = require("path");
 const mime = require("mime");
+const log = require("../utils/logger");
 
-if (!mime.getType("css")) {
-  mime.define({
-    "text/css": ["css"],
-  });
+class statRouter {
+  constructor(conf) {
+    !mime.getType("css") ? mime.define({ "text/css": ["css"] }) : null;
+    !mime.getType("js")
+      ? mime.define({ "application/javascript": ["js"] })
+      : null;
+
+    this.router = router;
+    this.router.get("/", (req, res) => {
+      const filePath = path.join(conf.dir, "/index.html");
+      res.sendFile(filePath);
+    });
+    this.router.use((req, res, next) => {
+      log.info(req.ip);
+      next();
+    });
+
+    this.router.use(
+      "/static/css",
+      express.static(path.join(conf.dir, "/static/css"))
+    );
+    this.router.use(
+      "/static/js",
+      express.static(path.join(conf.dir, "/static/js"))
+    );
+  }
+
+  getRrouter() {
+    return this.router;
+  }
 }
 
-if (!mime.getType("js")) {
-  mime.define({
-    "application/javascript": ["js"],
-  });
-}
-
-router.get("/", (req, res) => {
-  const filePath = path.join(config.http.dir, "/index.html");
-  res.sendFile(filePath);
-});
-
-router.use((req, res, next) => {
-  console.log("Time: ", Date.now(), "IP:", req.ip);
-  next();
-});
-
-router.use(
-  "/static/css",
-  express.static(path.join(config.http.dir, "/static/css"))
-);
-router.use(
-  "/static/js",
-  express.static(path.join(config.http.dir, "/static/js"))
-);
-
-module.exports = router;
+module.exports = statRouter;
