@@ -1,14 +1,14 @@
 #!/usr/bin/node
 const express = require("express");
-const config = require("./src/options/params");
-const StatRouter = require("./src/routers/static");
+const config = require("./src/utils/params");
 const log = require("./src/utils/logger");
+const StatRouter = require("./src/routers/static");
 
 const app = express();
 const staticRouter = new StatRouter(config);
 
 app.use("/", staticRouter.getRrouter());
 
-app.listen(config.port, () => {
+app.listen(config.port, "0.0.0.0", () => {
   log.info("Started at port", config.port);
 });

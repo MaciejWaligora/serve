@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require("path");
 const mime = require("mime");
 const log = require("../utils/logger");
+const net = require("net");
 
 class statRouter {
   constructor(conf) {
@@ -13,11 +14,15 @@ class statRouter {
 
     this.router = router;
     this.router.get("/", (req, res) => {
-      const filePath = path.join(conf.dir, "/index.html");
+      const filePath = path.join(conf.dir, `/${conf.file}`);
       res.sendFile(filePath);
     });
     this.router.use((req, res, next) => {
-      log.info(req.ip);
+      const ipAddress = req.ip.includes("::ffff:") ? req.ip.slice(7) : req.ip;
+      const formattedIpAddress = net.isIPv6(ipAddress)
+        ? `[${ipAddress}]`
+        : ipAddress;
+      log.info(formattedIpAddress);
       next();
     });
 
