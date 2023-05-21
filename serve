@@ -1,8 +1,9 @@
-#!/usr/bin/node
+#!/usr/local/bin/node
 const express = require("express");
 const config = require("./src/utils/params");
 const log = require("./src/utils/logger");
 const StatRouter = require("./src/routers/static");
+const ip = require("ip");
 
 const app = express();
 const staticRouter = new StatRouter(config);
@@ -10,5 +11,9 @@ const staticRouter = new StatRouter(config);
 app.use("/", staticRouter.getRrouter());
 
 app.listen(config.port, "0.0.0.0", () => {
-  log.info("Started at port", config.port);
+  log.info(
+    `Started Application, for preview Visit: http://${ip.address()}:${
+      config.port
+    }`
+  );
 });
