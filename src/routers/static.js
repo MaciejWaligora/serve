@@ -8,8 +8,7 @@ class statRouter {
     this.router = router;
     this.setupMIMETypes();
     this.setupRouterRootHanlder(conf);
-    this.setupRouterCSSHandler(conf);
-    this.setupRouterJSHandler(conf);
+    this.setupRouterStaticHandler(conf);
   }
 
   getRrouter() {
@@ -29,20 +28,9 @@ class statRouter {
     });
   }
 
-  setupRouterCSSHandler(conf) {
-    this.router.use(
-      "/static/css",
-      express.static(path.join(conf.dir, "/static/css"))
-    );
+  setupRouterStaticHandler(conf) {
+    this.router.use("/", express.static(conf.dir));
   }
-
-  setupRouterJSHandler(conf) {
-    this.router.use(
-      "/static/js",
-      express.static(path.join(conf.dir, "/static/js"))
-    );
-  }
-
   setupMIMETypes() {
     !mime.getType("css") ? mime.define({ "text/css": ["css"] }) : null;
     !mime.getType("js")
