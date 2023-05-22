@@ -14,7 +14,6 @@ class statRouter {
   getRrouter() {
     return this.router;
   }
-
   setupRouterRootHanlder(conf) {
     this.router.get("/", (req, res) => {
       try {
@@ -27,7 +26,6 @@ class statRouter {
       }
     });
   }
-
   setupRouterStaticHandler(conf) {
     this.router.use("/", express.static(conf.dir));
   }

@@ -9,6 +9,9 @@ const options = new Getopt([
   ["p", "port=", "Specify serving port"],
   ["d", "dir=", "Specify serving directory"],
   ["f", "file=", "Specify entry html file"],
+  ["h", "https=", "set https"],
+  ["k", "key=", "set https key file"],
+  ["c", "cert=", "set https cert file"],
 ]);
 
 const fileCheckerr = new fileValidator();
@@ -19,6 +22,7 @@ class Configuration {
     this.config = {};
     try {
       this.setHttp();
+      this.parsedOptions.options.https ? this.setHttps() : null;
       log.info(
         "Loaded configuration:\n",
         util.inspect(this.config, { depth: null, colors: true })
@@ -44,6 +48,15 @@ class Configuration {
     };
   }
 
+  setHttps() {
+    const key = this.parsedOptions.options.key;
+    const cert = this.parsedOptions.options.cert;
+    this.config.https = {
+      key: key,
+      cert: cert,
+    };
+  }
+
   get port() {
     return this.config.http.port;
   }
@@ -54,6 +67,10 @@ class Configuration {
 
   get file() {
     return this.config.http.file;
+  }
+
+  get https() {
+    return this.config.https;
   }
 
   getDirectory() {
