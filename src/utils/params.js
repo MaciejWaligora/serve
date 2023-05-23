@@ -2,7 +2,7 @@ const path = require("path");
 const Getopt = require("node-getopt");
 const log = require("./logger");
 const util = require("util");
-const fileValidator = require("./validator");
+const Validator = require("./validator");
 
 const options = new Getopt([
   ["h", "help", "Display help"],
@@ -13,8 +13,6 @@ const options = new Getopt([
   ["k", "key=", "set https key file"],
   ["c", "cert=", "set https cert file"],
 ]);
-
-const fileCheckerr = new fileValidator();
 
 class Configuration {
   constructor(opt) {
@@ -80,7 +78,7 @@ class Configuration {
     const file = this.parsedOptions.options.file
       ? this.parsedOptions.options.file
       : "index.html";
-    if (fileCheckerr.fileGood(directory + "/" + file)) {
+    if (Validator.fileGood(directory + "/" + file, "html")) {
       return [directory, file];
     } else {
       throw new Error(

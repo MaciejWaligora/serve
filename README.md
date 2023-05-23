@@ -1,6 +1,6 @@
 # SERVE tool
 
-    Express.js based tool to deploy an app
+Express.js based tool to deploy an app
 
 ## Install
 
@@ -14,17 +14,17 @@ cd cloned/dir
 npm install
 ```
 
-2. Add yourDir/serve to your %PATH in order for script to run anywhere
+2. Add path/to/your/serve to your %PATH in order for script to run anywhere
 
 ## Usage
 
-1. Options:
+1. Options:\
    --port => set a port on which you want to serve you app (default 3000)\
    --dir => set dir location of your app build folder (default current directory)\
    --file => set entry html file (default "index.html")\
    --https => toggle https mode\
    --key => provide key.pem file PATH\
-   --cert => provide cert.pem file PATH\
+   --cert => provide cert.pem file PATH
 
 Sample usage to run on port 2000 directly from your build folder:
 

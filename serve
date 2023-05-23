@@ -12,16 +12,20 @@ const staticRouter = new StatRouter(config);
 app.use("/", staticRouter.getRrouter());
 
 if (config.https) {
-  let server = new HttpsHandler(config.https, app);
-  server.loadCert();
-  server.start();
-  server.instance.listen(config.port, "0.0.0.0", () => {
-    log.info(
-      `Started Application, for preview Visit: https://${ip.address()}:${
-        config.port
-      }`
-    );
-  });
+  try {
+    let server = new HttpsHandler(config.https, app);
+    server.loadCert();
+    server.start();
+    server.instance.listen(config.port, "0.0.0.0", () => {
+      log.info(
+        `Started Application, for preview Visit: https://${ip.address()}:${
+          config.port
+        }`
+      );
+    });
+  } catch (e) {
+    log.error(e.message);
+  }
 } else {
   app.listen(config.port, "0.0.0.0", () => {
     log.info(
