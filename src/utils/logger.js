@@ -1,6 +1,6 @@
 const Formatter = require("./formatter");
 class Log {
-  info(...args) {
+  static info(...args) {
     let msg = args.map((arg) =>
       typeof arg === "object" ? (arg = JSON.stringify(arg, null, 4)) : arg
     );
@@ -9,7 +9,7 @@ class Log {
       ...msg
     );
   }
-  error(...args) {
+  static error(...args) {
     let msg = args.map((arg) =>
       typeof arg === "object" ? (arg = JSON.stringify(arg, null, 4)) : arg
     );
@@ -20,4 +20,4 @@ class Log {
   }
 }
 
-module.exports = new Log();
+module.exports = Log;

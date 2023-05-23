@@ -1,8 +1,10 @@
 const path = require("path");
 const Getopt = require("node-getopt");
-const log = require("./logger");
+const Log = require("./logger");
 const util = require("util");
 const Validator = require("./validator");
+const Formatter = require("./formatter");
+const FileConf = require("./confLoader");
 
 const options = new Getopt([
   ["h", "help", "Display help"],
@@ -15,19 +17,28 @@ const options = new Getopt([
 ]);
 
 class Configuration {
-  constructor(opt) {
-    this.parsedOptions = opt.parseSystem();
-    this.config = {};
+  constructor(globdir) {
     try {
-      this.setHttp();
-      this.parsedOptions.options.https ? this.setHttps() : null;
-      log.info(
+      this.parsedOptions = options.parseSystem();
+      this.defaultConfig = new FileConf(globdir, process.cwd()).getConfig();
+      this.overWriteConfig = { http: this.setHttp() };
+      this.parsedOptions.options.https === "true"
+        ? (this.overWriteConfig.https = this.setHttps())
+        : null;
+      this.config = FileConf.mergeConfigs(
+        this.defaultConfig,
+        this.overWriteConfig
+      );
+      Log.info(
         "Loaded configuration:\n",
-        util.inspect(this.config, { depth: null, colors: true })
+        util.inspect(Formatter.flattenObject(this.config), {
+          depth: null,
+          colors: true,
+        })
       );
     } catch (e) {
-      log.error("Failed To load Configuration: ", e.message);
-      log.error("Exiting...");
+      Log.error("Failed To load Configuration: ", e.message);
+      Log.error("Exiting...");
       process.exit(0);
     }
   }
@@ -35,11 +46,11 @@ class Configuration {
   setHttp() {
     const port = this.parsedOptions.options.port
       ? this.parsedOptions.options.port
-      : 3000;
+      : this.defaultConfig.http.port;
 
     const [directory, file] = this.getDirectory();
 
-    this.config.http = {
+    return {
       dir: directory,
       port: +port,
       file: file,
@@ -49,7 +60,8 @@ class Configuration {
   setHttps() {
     const key = this.parsedOptions.options.key;
     const cert = this.parsedOptions.options.cert;
-    this.config.https = {
+    return {
+      status: true,
       key: key,
       cert: cert,
     };
@@ -77,7 +89,7 @@ class Configuration {
       : process.cwd();
     const file = this.parsedOptions.options.file
       ? this.parsedOptions.options.file
-      : "index.html";
+      : this.defaultConfig.http.file;
     if (Validator.fileGood(directory + "/" + file, "html")) {
       return [directory, file];
     } else {
@@ -88,4 +100,4 @@ class Configuration {
   }
 }
 
-module.exports = new Configuration(options);
+module.exports = Configuration;

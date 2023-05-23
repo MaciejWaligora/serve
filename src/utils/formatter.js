@@ -12,6 +12,31 @@ class Formatter {
     const tz = Math.abs(date.getTimezoneOffset() / 60);
     return `[${day}/${month}/${year}-${h}:${m}:${s} GMT+${tz}]`;
   }
+
+  static flattenObject(obj) {
+    const result = {};
+
+    function recurse(currentObj, currentKey) {
+      if (typeof currentObj !== "object" || currentObj === null) {
+        result[currentKey] = currentObj;
+      } else if (Array.isArray(currentObj)) {
+        currentObj.forEach((value, index) => {
+          recurse(value, `${currentKey}[${index}]`);
+        });
+      } else {
+        for (const key in currentObj) {
+          if (currentObj.hasOwnProperty(key)) {
+            const newKey = currentKey ? `${currentKey}.${key}` : key;
+            recurse(currentObj[key], newKey);
+          }
+        }
+      }
+    }
+
+    recurse(obj, "");
+
+    return result;
+  }
 }
 
 module.exports = Formatter;

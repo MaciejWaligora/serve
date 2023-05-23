@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-class fileValidator {
+class Validator {
   static fileGood(filePath, extension) {
     if (fs.existsSync(filePath) && path.extname(filePath) === `.${extension}`) {
       return true;
@@ -10,4 +10,4 @@ class fileValidator {
   }
 }
 
-module.exports = fileValidator;
+module.exports = Validator;

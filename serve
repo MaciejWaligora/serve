@@ -1,37 +1,40 @@
 #!/usr/local/bin/node
 const express = require("express");
-const config = require("./src/utils/params");
-const log = require("./src/utils/logger");
+const configLoader = require("./src/utils/params");
+const Log = require("./src/utils/logger");
 const StatRouter = require("./src/routers/static");
 const ip = require("ip");
 const HttpsHandler = require("./src/https/httpsHandler");
 
 const app = express();
+const config = new configLoader(__dirname);
 const staticRouter = new StatRouter(config);
 
 app.use("/", staticRouter.getRrouter());
 
-if (config.https) {
-  try {
+try {
+  if (config.https.status) {
     let server = new HttpsHandler(config.https, app);
     server.loadCert();
     server.start();
     server.instance.listen(config.port, "0.0.0.0", () => {
-      log.info(
+      Log.info(
         `Started Application, for preview Visit: https://${ip.address()}:${
           config.port
         }`
       );
     });
-  } catch (e) {
-    log.error(e.message);
+  } else {
+    app.listen(config.port, "0.0.0.0", () => {
+      Log.info(
+        `Started Application, for preview Visit: http://${ip.address()}:${
+          config.port
+        }`
+      );
+    });
   }
-} else {
-  app.listen(config.port, "0.0.0.0", () => {
-    log.info(
-      `Started Application, for preview Visit: http://${ip.address()}:${
-        config.port
-      }`
-    );
-  });
+} catch (e) {
+  Log.error(e.message);
+  Log.error("Exiting...");
+  process.exit(0);
 }

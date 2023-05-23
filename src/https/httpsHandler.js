@@ -1,5 +1,7 @@
 const fs = require("fs");
 const Validator = require("../utils/validator");
+const Log = require("../utils/logger");
+
 class HttpsHandler {
   constructor(conf, express) {
     this.https = require("https");
@@ -16,6 +18,7 @@ class HttpsHandler {
         key: fs.readFileSync(this.conf.key),
         cert: fs.readFileSync(this.conf.cert),
       };
+      Log.info("Certificate Verified");
     } else {
       throw new Error(
         "Could not read key or certificate Make sure PATH to cert are correct in config and if the file has extension of .pem"
@@ -26,6 +29,7 @@ class HttpsHandler {
   start() {
     try {
       this.instance = this.https.createServer(this.cert, this.express);
+      Log.info("HTTPS server started");
     } catch (e) {
       throw Error("Could not start the https server");
     }
