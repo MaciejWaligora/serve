@@ -1,2 +1,4 @@
 /node_modules
 .prettierignore
+/test
+serve.conf
